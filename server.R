@@ -5,16 +5,7 @@ shinyServer(function(input,output) {
     library(leaflet)
     data("zipcode")
     
-    
-#    notZipcode<-function(input){
-#        if(is.na(input)){
-#            "Zipcode not found. "
-#        }
-#        else{
-#            NULL
-#        }
-#    }
-    
+    ## interactive r function
     zipComp <- reactive({
         zipI <- input$box1
         k <- subset(zipcode, zip == as.character(zipI))
@@ -24,12 +15,15 @@ shinyServer(function(input,output) {
         k
     })
     
+    # define text output
     output$loca <- renderText({
         zipInfo <- zipComp()
         paste0("<font size=4>Zipcode <font color=\"#0000FF\"><b>",zipInfo$zip, 
                "</b></font> is located at <font color=\"#0000FF\"><b>",
                zipInfo$city, ", ",zipInfo$state,"</b></font></font>")
         })
+    
+    # define leaflet map output
     output$locaMap <- renderLeaflet({
         zipInfo <- zipComp()
         leaflet()%>%
